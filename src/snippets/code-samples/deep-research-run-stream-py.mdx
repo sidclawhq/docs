@@ -1,0 +1,14 @@
+```python
+if __name__ == "__main__":
+    from langchain_core.messages import HumanMessage
+
+    for chunk in agent.stream(
+        {"messages": [HumanMessage(content="Compare Python vs JavaScript for web development")]},
+        stream_mode="updates",
+    ):
+        for node, update in chunk.items():
+            if messages := update.get("messages"):
+                for msg in messages:
+                    if hasattr(msg, "content") and msg.content:
+                        print(msg.content)
+```
