@@ -285,6 +285,7 @@ if __name__ == "__main__":
         if hasattr(msg, "content") and msg.content:
             print(msg.content)
 # :snippet-end:
+    assert result is not None
 
 # :snippet-start: deep-research-run-stream-py
 if __name__ == "__main__":
@@ -302,13 +303,14 @@ if __name__ == "__main__":
         for node, update in chunk.items():
             if not update or not (messages := update.get("messages")):
                 continue
-                msg_list = (
-                    messages.value if isinstance(messages, Overwrite) else messages
-                )
-                for msg in msg_list:
-                    if hasattr(msg, "content") and msg.content:
-                        print(msg.content)
+            msg_list = (
+                messages.value if isinstance(messages, Overwrite) else messages
+            )
+            for msg in msg_list:
+                if hasattr(msg, "content") and msg.content:
+                    print(msg.content)
 # :snippet-end:
+    assert msg_list is not None
 
 
 # :remove-start:
