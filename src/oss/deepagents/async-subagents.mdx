@@ -170,7 +170,7 @@ Each tracked task records the task ID, agent name, thread ID, run ID, status, an
 :::
 
 :::js
-Task metadata is stored in a dedicated state channel (`asyncSubAgentTasks`) on the supervisor's graph, separate from the message history. This is critical because deep agents [compact their message history](/oss/deepagents/customization#summarization) when the context window fills up -- if task IDs were only in tool messages, they would be lost during compaction. The dedicated channel ensures the supervisor can always recall its tasks through `list_async_tasks`, even after multiple rounds of summarization.
+Task metadata is stored in a dedicated state channel (`asyncTasks`) on the supervisor's graph, separate from the message history. This is critical because deep agents [compact their message history](/oss/deepagents/customization#summarization) when the context window fills up -- if task IDs were only in tool messages, they would be lost during compaction. The dedicated channel ensures the supervisor can always recall its tasks through `list_async_tasks`, even after multiple rounds of summarization.
 
 Each tracked task records the task ID, agent name, thread ID, run ID, status, and timestamps (`createdAt`, `lastCheckedAt`, `lastUpdatedAt`).
 :::
@@ -200,7 +200,7 @@ AsyncSubAgent(
 
 :::js
 ```typescript
-{
+const subagent: AsyncSubAgent = {
   name: "researcher",
   description: "Research agent",
   graphId: "researcher",
@@ -391,14 +391,14 @@ AsyncSubAgent(
 :::js
 ```typescript
 // Good
-{
+const researcher: AsyncSubAgent = {
   name: "researcher",
   description: "Conducts in-depth research using web search. Use for questions requiring multiple searches and synthesis.",
   graphId: "researcher",
 }
 
 // Bad
-{
+const helper: AsyncSubAgent = {
   name: "helper",
   description: "helps with stuff",
   graphId: "helper",
@@ -435,10 +435,10 @@ agent = create_deep_agent(
 ```typescript
 const agent = createDeepAgent({
   model: "claude-sonnet-4-6",
-  systemPrompt: `...your instructions...
-
-    After launching an async subagent, ALWAYS return control to the user.
-    Never call check_async_task immediately after launch.`,
+  systemPrompt:
+    "...your instructions..." + 
+    "After launching an async subagent, ALWAYS return control to the user." +
+    "Never call check_async_task immediately after launch."
   subagents: [...asyncSubagents],
 });
 ```
